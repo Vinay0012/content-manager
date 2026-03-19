@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="/static/css/style.css">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body>
+		<div class="topnav">
+			<button class="menu-btn" onclick="toggleMenu()">☰</button>
+			<button onclick="goHome()">Home</button>
+			<button>About Us</button>
+			<button>Reach Us</button>
+		</div>
+		<div class="layout">
+			<div class="sidebar" id="sidebar">
+				<button class="close-btn" onclick="toggleMenu()">✕</button>
+				<h3>Folders</h3>
+				<ul id="folders"></ul>
+			</div>
+			<div class="main">
+				<div class="generator">
+					<button onclick="randomPost()">Random</button>
+					<button onclick="chooseFolder()">Choose From Folder</button>
+				</div>
+				<div id="posts"></div>
+			</div>
+		</div>
+		<div id="adminLogin" class="admin-login">
+			<form action="/login" method="POST">
+				<h3>Admin Login</h3>
+				<input name="username" placeholder="Username" required>
+				<input type="password" name="password" placeholder="Password" required>
+				<button type="submit">Login</button>
+			</form>
+		</div>
+		<script src="/static/js/feed.js"></script>
+	</body>
+</html>

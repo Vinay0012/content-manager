@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="/static/css/style.css">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body>
+		<div class="topnav">
+			<button class="menu-btn" onclick="toggleMenu()">☰</button>
+			<button onclick="goHome()">Home</button>
+			<button>About Us</button>
+			<button>Reach Us</button>
+			<a href="/logout">
+				<button>Logout</button>
+			</a>
+		</div>
+		<div class="layout">
+			<div class="sidebar" id="sidebar">
+				<button class="close-btn" onclick="toggleMenu()">✕</button>
+				<h3>Folders</h3>
+				<form id="folder-form" method="POST" action="/add_folder">
+					<input name="name" placeholder="New folder">
+					<select name="parent_id">
+						<option value="">No Parent</option>
+					</select>
+					<button type="submit">+</button>
+				</form>
+				<ul id="folders"></ul>
+			</div>
+			<div class="main">
+				<h1>Content Manager</h1>
+				<p>Upload and organize text, photos, and videos.</p>
+				<div class="content-buttons">
+					<button onclick="showText()">Text</button>
+					<button onclick="showTable()">Table</button>
+					<button onclick="showPhoto()">Photo</button>
+					<button onclick="showVideo()">Video</button>
+				</div>
+				<div id="input-area"></div>
+				<div class="generator">
+					<button onclick="randomPost()">Random Text</button>
+					<button onclick="chooseFolder()">Choose From Folder</button>
+				</div>
+				<div id="result"></div>
+			</div>
+		</div>
+		<script src="/static/js/script.js"></script>
+		<div id="moveModal" class="modal">
+			<div class="modal-content">
+				<h3>Move Post</h3>
+				<select id="moveFolderSelect"></select>
+				<div class="modal-actions">
+					<button onclick="confirmMove()">Move</button>
+					<button onclick="closeMoveModal()">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
