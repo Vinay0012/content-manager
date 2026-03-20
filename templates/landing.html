@@ -10,29 +10,24 @@
 		}
 
 		.landing{
-			width: 100vw;
-			height: 100vh;
-			overflow: hidden;
-		}
-
-		.landing img{
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
-		
-		img{
-  width: 100%;
+  width: 100vw;
   height: 100vh;
+  overflow: hidden;
+}
+
+.landing-img{
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   display: block;
 }
+		
 	</style>
 </head>
 <body>
 <div class="landing">
   <a href="/feed">
-    <img src="/static/landing.png" onclick="goToFeed()">
+    <img class="landing-img" src="/static/landing.png">
   </a>
 </div>
 
