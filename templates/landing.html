@@ -6,38 +6,26 @@
 		html, body{
   margin:0;
   padding:0;
-  overflow:hidden;   /* 🔥 force no scroll */
+  overflow:hidden;
 }
 
 .landing{
-  position: fixed;   /* 🔥 key fix */
+  position: fixed;
   top:0;
   left:0;
   width:100%;
   height:100%;
-}
-
-.landing a{
-  display:block;
-  width:100%;
-  height:100%;
-}
-
-.landing-img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
+  background-image: url('/static/landing.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
 }
 		
 	</style>
 </head>
 <body>
-<div class="landing">
-  <a href="/feed">
-    <img class="landing-img" src="/static/landing.png">
-  </a>
-</div>
+<div class="landing" onclick="goToFeed()"></div>
 
 
 <script>
