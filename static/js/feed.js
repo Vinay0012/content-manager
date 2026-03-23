@@ -1,15 +1,25 @@
+localStorage.setItem("key", "value")
+localStorage.getItem("key")
+
 let currentPage = 1
+let TOTAL_POSTS = 0
 
 function loadFeed(page=1){
 	fetch("/feed_posts?page=" + page)
 	.then(res => res.json())
 	.then(data => {
+
+		TOTAL_POSTS = data.total   // 👈 store total posts from backend
+
 		let html = ""
 		data.posts.forEach(post => {
 			html += renderPost(post)
 		})
+
 		document.getElementById("posts").innerHTML = html
 		renderPagination(data.total, data.per_page, data.page)
+
+		updateProgress()   // 👈 now uses global total
 	})
 }
 
@@ -24,16 +34,20 @@ function renderPost(post, query=""){
 	let time = post[4]
 	let html = ""
 	if(type=="text"){
+		let isChecked = getReadPosts().includes(id) ? "checked" : ""
 		html = `
 		<div class="post">
+			<input type="checkbox" ${isChecked} onchange="toggleRead(${id})">
 			<p>${highlightText(content, query)}</p>
 			<div class="timestamp">${time}</div>
 		</div>
 		`
 	}
 	if(type=="photo"){
+		let isChecked = getReadPosts().includes(id) ? "checked" : ""
 		html = `
 		<div class="post">
+			<input type="checkbox" ${isChecked} onchange="toggleRead(${id})">
 			<div class="caption">
 				${highlightText(caption || "", query)}
 			</div>
@@ -43,7 +57,9 @@ function renderPost(post, query=""){
 		`
 	}
 	if(type=="video"){
+		let isChecked = getReadPosts().includes(id) ? "checked" : ""
 		html = `
+		<input type="checkbox" ${isChecked} onchange="toggleRead(${id})">
 		<div class="post">
 			<video controls src="${content}"></video>
 			<p>${highlightText(caption || "", query)}</p>
@@ -62,7 +78,9 @@ function renderPost(post, query=""){
 			tableHtml += "</tr>"
 		})
 		tableHtml += "</table>"
+		let isChecked = getReadPosts().includes(id) ? "checked" : ""
 		html = `
+		<input type="checkbox" ${isChecked} onchange="toggleRead(${id})">
 		<div class="post">
 			${tableHtml}
 			<div class="timestamp">${time}</div>
@@ -131,6 +149,7 @@ function openFolderById(folderId, page=1){
 
 		// ✅ THEN add pagination
 		renderFolderPagination(data.total, data.per_page, data.page, folderId)
+		updateProgress()
 	})
 }
 
@@ -271,3 +290,51 @@ function highlightText(text, query){
 
 let tapCount = 0
 let tapTimer = null
+
+function getReadPosts(){
+  return JSON.parse(localStorage.getItem("readPosts") || "[]")
+}
+
+function markAsRead(postId){
+  let read = getReadPosts()
+  if(!read.includes(postId)){
+    read.push(postId)
+    localStorage.setItem("readPosts", JSON.stringify(read))
+  }
+}
+
+function toggleRead(postId){
+  let read = getReadPosts()
+
+  if(read.includes(postId)){
+    read = read.filter(id => id !== postId)
+  }else{
+    read.push(postId)
+  }
+
+  localStorage.setItem("readPosts", JSON.stringify(read))
+  updateProgress()
+}
+
+function updateProgress(){
+
+  let bar = document.getElementById("progressBar")
+  let text = document.getElementById("progressText")
+
+  if(!bar || !text) return
+
+  let read = getReadPosts()
+
+  // ✅ remove duplicates (important)
+  let uniqueRead = [...new Set(read)]
+
+  let total = TOTAL_POSTS || 0
+
+  let percent = total ? (uniqueRead.length / total) * 100 : 0
+
+  // ✅ cap at 100%
+  if(percent > 100) percent = 100
+
+  bar.style.width = percent + "%"
+  text.innerText = `${uniqueRead.length} / ${total} completed`
+}
